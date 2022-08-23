@@ -3,6 +3,10 @@ name: Rebuild on base image change
 on:
   schedule:
     - cron: "0 1 * * *"
+  push:
+    paths:
+      - '.github/workflows/rebuild-on-base-image-change.yml'
+      - '!*'
 
 jobs:
   docker:
@@ -34,10 +38,10 @@ jobs:
 
       - name: Check if update available
         id: check
-        uses: lucacome/docker-image-update-checker@v1
+        uses: mkumatag/container-image-updater-action@v1
         with:
           base-image: library/telegraf:latest
-          image: steps.prep.outputs.tags
+          image: ghcr.io/${{ steps.prep.outputs.tags }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
